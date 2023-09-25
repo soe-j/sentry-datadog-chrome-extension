@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "sentry_datadog",
+  "description": "sentry_datadog",
+  "version": "0.1",
+  "icons": {
+    "128": "images/icons/128.png"
+  },
+  "action": {
+    "default_icon": {
+      "19": "images/icons/19.png",
+      "38": "images/icons/38.png"
+    },
+    "default_title": "sentry_datadog",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "scripts/service_worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.sentry.io/*"],
+      "js": ["scripts/content_script.js"]
+    }
+  ],
+  "permissions": ["tabs", "storage"]
+}
