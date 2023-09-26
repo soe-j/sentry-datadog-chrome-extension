@@ -1,7 +1,18 @@
 body {
   background: #1d1e20;
   font-size: 13px;
+  color: #fff;
 }
+
+.description {
+  padding: 8px 8px 8px 24px;
+  background: #252528;
+}
+.description span {
+  background: #2c3038;
+  color: #8ab4f8;
+}
+
 .row {
   width: 100%;
   display: flex;
