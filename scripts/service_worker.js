@@ -5,7 +5,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
     return null;
   });
   if (result === null) return;
-  const { userId, dateLabel } = result;
+  const { env, userId, dateLabel } = result;
 
   const [dateStr, timeStr] = dateLabel.split(", ");
   const today = new Date();
@@ -19,6 +19,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
 
   const query = [
     message.query.tags,
+    `env:${env}`,
     userId ? `${message.query.userIdKey}:${userId}` : null,
   ]
     .filter((v) => v)
