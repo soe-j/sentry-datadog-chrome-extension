@@ -12,10 +12,10 @@ chrome.runtime.onMessage.addListener(async (message) => {
   const eventDate = new Date(`${dateStr} ${today.getFullYear()} ${timeStr}`);
 
   const startDate = new Date(eventDate);
-  startDate.setMinutes(eventDate.getMinutes() - 1);
+  startDate.setMinutes(eventDate.getMinutes() - 0);
 
   const endDate = new Date(eventDate);
-  endDate.setMinutes(eventDate.getMinutes() + 1);
+  endDate.setMinutes(eventDate.getMinutes() + 2);
 
   const query = [
     message.query.tags,
