@@ -6,10 +6,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   const env = envElem.innerText.split("\n")[1];
 
-  const userIdElem = document.querySelector(
-    '[data-test-id="user-context-id-value"]'
-  );
-  const userId = userIdElem ? userIdElem.textContent : null;
+  const userIdElem = document.querySelector('[aria-label="user"]');
+  const userId = userIdElem ? userIdElem.innerText.split("\n")[1] : null;
 
   const dateElem = document.querySelector("time");
   if (!dateElem) {
