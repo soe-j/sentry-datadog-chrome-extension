@@ -14,15 +14,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   const userIdElem = document
     .querySelector('[data-sentry-element="CardPanel"]')
-    ?.querySelector('[data-sentry-element="ValueSection"]');
+    ?.querySelector('[data-sentry-element="ContentWrapper"]');
 
-  if (!userIdElem) {
+  const hasUserIdElem =
+    userIdElem && userIdElem.innerText.split("\n")[0] === "ID";
+  if (!hasUserIdElem) {
     if (!window.confirm("userIdElem is not found. continue?")) {
       return;
     }
   }
-
-  const userId = userIdElem ? userIdElem.innerText : null;
+  const userId = hasUserIdElem ? userIdElem.innerText.split("\n")[1] : null;
 
   const dateElem = document.querySelector('[data-sentry-component="DateTime"]');
   if (!dateElem) {
