@@ -4,8 +4,16 @@ chrome.runtime.onMessage.addListener(async (message) => {
     console.log(reason);
     return null;
   });
-  if (result === null) return;
+  if (!result) return;
   const { env, userId, dateLabel } = result;
+
+  if (!dateLabel) {
+    openTab({
+      query: message.query.tags,
+      paused: false,
+    });
+    return;
+  }
 
   const [dateStr, timeStr] = dateLabel.split(", ");
   const today = new Date();
@@ -19,17 +27,22 @@ chrome.runtime.onMessage.addListener(async (message) => {
 
   const query = [
     message.query.tags,
-    `env:${env}`,
+    env ? `env:${env}` : null,
     userId ? `${message.query.userIdKey}:${userId}` : null,
   ]
     .filter((v) => v)
     .join(" ");
-  const params = new URLSearchParams({
+
+  openTab({
     query,
     start: startDate.getTime(),
     end: endDate.getTime(),
     paused: true,
   });
+});
+
+const openTab = (query) => {
+  const params = new URLSearchParams(query);
   const url = `https://app.datadoghq.com/apm/traces?${params}`;
   chrome.tabs.create({ url });
-});
+};

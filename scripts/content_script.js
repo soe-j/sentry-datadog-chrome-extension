@@ -1,36 +1,40 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const envElem = document.querySelector('[aria-label="environment"]');
   if (!envElem) {
-    alert('Not found [aria-label="environment"] Element');
-    return;
+    if (!window.confirm("envElem is not found. continue?")) {
+      return;
+    }
   }
-  const envRaw = envElem.innerText.split("\n")[1];
   const env = (() => {
+    if (!envElem) return null;
+    const envRaw = envElem.innerText.split("\n")[1];
     if (envRaw.includes("develop")) return "develop";
     return envRaw;
   })();
 
   const userIdElem = document
     .querySelector('[data-sentry-element="CardPanel"]')
-    .querySelector('[data-sentry-element="ValueSection"]');
+    ?.querySelector('[data-sentry-element="ValueSection"]');
 
   if (!userIdElem) {
-    if (!window.confirm("userIdElem not found. continue?")) {
+    if (!window.confirm("userIdElem is not found. continue?")) {
       return;
     }
   }
 
   const userId = userIdElem ? userIdElem.innerText : null;
 
-  const dateElem = document.querySelector("time");
+  const dateElem = document.querySelector('[data-sentry-component="DateTime"]');
   if (!dateElem) {
-    alert("Not found <time> Element");
-    return;
+    if (!window.confirm("dateElem is not found. continue?")) {
+      return;
+    }
   }
+  const dateLabel = dateElem ? dateElem.textContent : null;
 
   sendResponse({
     env,
     userId,
-    dateLabel: dateElem.textContent,
+    dateLabel,
   });
 });
