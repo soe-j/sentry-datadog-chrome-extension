@@ -35,14 +35,14 @@ chrome.runtime.onMessage.addListener(async (message) => {
 
   openTab({
     query,
-    start: startDate.getTime(),
-    end: endDate.getTime(),
-    paused: true,
+    from_ts: startDate.getTime(),
+    to_ts: endDate.getTime(),
+    live: false,
   });
 });
 
 const openTab = (query) => {
   const params = new URLSearchParams(query);
-  const url = `https://app.datadoghq.com/apm/traces?${params}`;
+  const url = `https://app.datadoghq.com/logs?${params}`;
   chrome.tabs.create({ url });
 };
