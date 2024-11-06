@@ -7,10 +7,7 @@ const renderQueries = async () => {
 
     const execBtn = document.createElement("button");
     execBtn.classList.add("btn", "exec-btn");
-    execBtn.innerText = `${query.tags} ${query.userIdKey}`;
-    execBtn.addEventListener("click", () => {
-      chrome.runtime.sendMessage({ query });
-    });
+    execBtn.innerText = `${query.sentryProject} → ${query.tags} ${query.userIdKey}`;
     row.appendChild(execBtn);
 
     const delBtn = document.createElement("button");
@@ -19,6 +16,7 @@ const renderQueries = async () => {
     delBtn.addEventListener("click", () => {
       setQueries(
         state.queries.filter((q) => {
+          if (q.sentryProject !== query.sentryProject) return true;
           if (q.tags !== query.tags) return true;
           if (q.userIdKey !== query.userIdKey) return true;
           return false;
@@ -50,6 +48,7 @@ const setQueries = async (queries) => {
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const sentryProjectInput = document.getElementById("sentry-project-input");
   const queryInput = document.getElementById("query-input");
   const userIdKeyInput = document.getElementById("user-id-key-input");
   state.queriesBox = document.getElementById("queries-box");
@@ -60,19 +59,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   const handler = (e) => {
     if (e.code !== "Enter") return;
 
-    if (!queryInput.value || !userIdKeyInput.value) {
-      return;
-    }
-
     setQueries([
       ...state.queries,
-      { tags: queryInput.value, userIdKey: userIdKeyInput.value },
+      {
+        sentryProject: sentryProjectInput.value,
+        tags: queryInput.value,
+        userIdKey: userIdKeyInput.value,
+      },
     ]);
     renderQueries();
 
+    sentryProjectInput.value = "";
     queryInput.value = "";
     userIdKeyInput.value = "";
   };
+
+  sentryProjectInput.addEventListener("keydown", handler);
   queryInput.addEventListener("keydown", handler);
   userIdKeyInput.addEventListener("keydown", handler);
 });

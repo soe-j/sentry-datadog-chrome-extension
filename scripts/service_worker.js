@@ -1,16 +1,36 @@
-chrome.runtime.onMessage.addListener(async (message) => {
+chrome.action.onClicked.addListener(async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const result = await chrome.tabs.sendMessage(tab.id, {}).catch((reason) => {
     console.log(reason);
     return null;
   });
   if (!result) return;
-  const { env, userId, dateLabel } = result;
+  const { env, userId, dateLabel, projectName } = result;
+
+  const savedQueries = await fetchQueries();
+  console.log({ savedQueries });
+
+  const targetQuery = savedQueries.find((q) => q.sentryProject === projectName);
+  if (!targetQuery) {
+    console.log(`query not found for ${projectName}`);
+    openTab({
+      live: false,
+    });
+    return;
+  }
+
+  const query = [
+    targetQuery.tags,
+    env ? `env:${env}` : null,
+    userId ? `${targetQuery.userIdKey}:${userId}` : null,
+  ]
+    .filter((v) => v)
+    .join(" ");
 
   if (!dateLabel) {
     openTab({
-      query: message.query.tags,
-      paused: false,
+      query,
+      live: false,
     });
     return;
   }
@@ -25,14 +45,6 @@ chrome.runtime.onMessage.addListener(async (message) => {
   const endDate = new Date(eventDate);
   endDate.setMinutes(eventDate.getMinutes() + 2);
 
-  const query = [
-    message.query.tags,
-    env ? `env:${env}` : null,
-    userId ? `${message.query.userIdKey}:${userId}` : null,
-  ]
-    .filter((v) => v)
-    .join(" ");
-
   openTab({
     query,
     from_ts: startDate.getTime(),
@@ -45,4 +57,9 @@ const openTab = (query) => {
   const params = new URLSearchParams(query);
   const url = `https://app.datadoghq.com/logs?${params}`;
   chrome.tabs.create({ url });
+};
+
+const fetchQueries = async () => {
+  const result = await chrome.storage.local.get(["queries"]);
+  return result.queries || [];
 };

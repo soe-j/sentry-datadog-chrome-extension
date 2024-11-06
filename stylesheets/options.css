@@ -54,11 +54,3 @@ body {
   outline: none;
   border-radius: 4px;
 }
-#query-input {
-  flex: 1 1 264px;
-  min-width: 264px;
-}
-#user-id-key-input {
-  flex: 1 1 88px;
-  min-width: 88px;
-}

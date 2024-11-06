@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sentry→Datadog</title>
+    <link rel="stylesheet" type="text/css" href="stylesheets/options.css" />
+    <script src="./scripts/options.js"></script>
+  </head>
+  <body>
+    <div id="queries-box"></div>
+    <div class="form">
+      <input
+        id="sentry-project-input"
+        class="input"
+        placeholder="Sentry Project"
+      />
+      <input id="query-input" class="input" placeholder="new query..." />
+      <input id="user-id-key-input" class="input" placeholder="UserID key" />
+    </div>
+    <ol class="description">
+      <li>
+        Type the query (e.g. <span>service:awesome-api</span>) and the user ID
+        key (e.g. <span>@user_id</span>) and press <span>enter</span> to
+        confirm.
+      </li>
+      <li>
+        You can get a button to link to Datadog APM Traces with the query that
+        contains Sentry Issue Information!
+      </li>
+    </ol>
+  </body>
+</html>
