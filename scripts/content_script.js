@@ -15,13 +15,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   })();
   console.log({ env });
 
-  const userIdElem = document
+  const userParams = document
     .querySelector('[data-sentry-element="CardPanel"]')
-    ?.querySelector('[data-sentry-element="ContentWrapper"]');
+    ?.querySelectorAll('[data-sentry-element="ContentWrapper"]');
 
-  const hasUserIdElem =
-    userIdElem && userIdElem.innerText.split("\n")[0] === "ID";
-  const userId = hasUserIdElem ? userIdElem.innerText.split("\n")[1] : null;
+  const userIdElem = Array.from(userParams).find((e) => {
+    return e.innerText.split("\n")[0] === "ID";
+  });
+  const userId = userIdElem ? userIdElem.innerText.split("\n")[1] : null;
   console.log({ userId });
 
   const dateElem = document.querySelector('[data-sentry-component="DateTime"]');
